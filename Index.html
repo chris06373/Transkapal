@@ -1,28 +1,103 @@
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Aplikasi Parkir</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistem Manajemen Parkir Kendaraan dengan perhitungan tarif otomatis dan log real-time.">
+  <title>Smart Parking System — Aplikasi Parkir</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Aplikasi Parkir</h1>
+  <header class="app-header">
+    <div class="container header-content">
+      <div>
+        <h1>Aplikasi Parkir</h1>
+        <p class="subtitle">Manajemen Kendaraan, Tarif Otomatis &amp; Riwayat Log</p>
+      </div>
+      <div class="revenue-card" aria-live="polite">
+        <span class="label">Total Pendapatan</span>
+        <strong id="total-revenue" class="revenue-amount">Rp 0</strong>
+      </div>
+    </div>
+  </header>
 
-<label for="plat">Nomor Plat:</label>
-<input type="text" id="plat" placeholder="Masukkan nomor plat">
+  <main class="container main-grid">
+    <!-- Panel Input & Kapasitas -->
+    <section class="card" aria-labelledby="form-heading">
+      <h2 id="form-heading">Check-In / Check-Out Kendaraan</h2>
 
-<div>
-<label><input type="radio" name="jenis" value="Motor" checked> Motor</label>
-<label><input type="radio" name="jenis" value="Mobil"> Mobil</label>
-<label><input type="radio" name="jenis" value="Bus">Bus </label>
-</div>
+      <form id="parking-form" novalidate>
+        <div class="form-group">
+          <label for="plat">Nomor Plat Kendaraan</label>
+          <input
+            type="text"
+            id="plat"
+            name="plat"
+            placeholder="Contoh: B 1234 XYZ"
+            autocomplete="off"
+            required
+          >
+        </div>
 
-<button onclick="masuk()">Masuk</button>
-<button onclick="keluar()">Keluar</button>
+        <fieldset class="form-group">
+          <legend>Jenis Kendaraan</legend>
+          <div class="radio-group">
+            <label class="radio-pill">
+              <input type="radio" name="jenis" value="Motor" checked>
+              <span>Motor <small>(Rp 3.000/jam)</small></span>
+            </label>
+            <label class="radio-pill">
+              <input type="radio" name="jenis" value="Mobil">
+              <span>Mobil <small>(Rp 5.000/jam)</small></span>
+            </label>
+            <label class="radio-pill">
+              <input type="radio" name="jenis" value="Bus">
+              <span>Bus <small>(Rp 10.000/jam)</small></span>
+            </label>
+          </div>
+        </fieldset>
 
+        <div class="button-group">
+          <button type="button" id="btn-masuk" class="btn btn-primary">Masuk</button>
+          <button type="button" id="btn-keluar" class="btn btn-secondary">Keluar &amp; Bayar</button>
+        </div>
+      </form>
 
-<h2>Log Parkir</h2>
-<ul id="log-list"></ul>
+      <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
 
-<script src="script.js"></script>
+      <!-- Fitur 2: Kapasitas Slot -->
+      <div class="capacity-section" aria-label="Kapasitas Parkir">
+        <h3>Kapasitas Slot Aktif</h3>
+        <div id="capacity-grid" class="capacity-grid"></div>
+      </div>
+    </section>
+
+    <!-- Panel Log Parkir -->
+    <section class="card" aria-labelledby="log-heading">
+      <div class="log-header">
+        <h2 id="log-heading">Log Parkir</h2>
+        <button type="button" id="btn-reset" class="btn btn-ghost btn-sm">Reset Data</button>
+      </div>
+
+      <!-- Fitur 3: Pencarian & Filter -->
+      <div class="toolbar">
+        <input
+          type="search"
+          id="search-plat"
+          placeholder="Cari nomor plat..."
+          aria-label="Cari nomor plat di log"
+        >
+        <select id="filter-status" aria-label="Filter status log">
+          <option value="ALL">Semua Status</option>
+          <option value="ACTIVE">Sedang Parkir</option>
+          <option value="COMPLETED">Sudah Keluar</option>
+        </select>
+      </div>
+
+      <ul id="log-list" class="log-list" aria-live="polite"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
