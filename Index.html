@@ -1,103 +1,272 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sistem Manajemen Parkir Kendaraan dengan perhitungan tarif otomatis dan log real-time.">
-  <title>Smart Parking System — Aplikasi Parkir</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistem Manajemen Transportasi Kapal Laut Antar Pulau">
+    <title>SeaTrans - Manajemen Kapal Laut</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="app-header">
+
+<header class="header">
     <div class="container header-content">
-      <div>
-        <h1>Aplikasi Parkir</h1>
-        <p class="subtitle">Manajemen Kendaraan, Tarif Otomatis &amp; Riwayat Log</p>
-      </div>
-      <div class="revenue-card" aria-live="polite">
-        <span class="label">Total Pendapatan</span>
-        <strong id="total-revenue" class="revenue-amount">Rp 0</strong>
-      </div>
+        <div class="brand">
+            <div class="brand-icon">⚓</div>
+            <div>
+                <h1>SeaTrans</h1>
+                <p>Sistem Transportasi Kapal Antar Pulau</p>
+            </div>
+        </div>
+
+        <div class="header-info">
+            <span class="live-dot"></span>
+            Sistem Operasional
+        </div>
     </div>
-  </header>
+</header>
 
-  <main class="container main-grid">
-    <!-- Panel Input & Kapasitas -->
-    <section class="card" aria-labelledby="form-heading">
-      <h2 id="form-heading">Check-In / Check-Out Kendaraan</h2>
+<main class="container">
 
-      <form id="parking-form" novalidate>
-        <div class="form-group">
-          <label for="plat">Nomor Plat Kendaraan</label>
-          <input
-            type="text"
-            id="plat"
-            name="plat"
-            placeholder="Contoh: B 1234 XYZ"
-            autocomplete="off"
-            required
-          >
+    <!-- DASHBOARD -->
+    <section class="page-heading">
+        <div>
+            <h2>Dashboard Transportasi</h2>
+            <p>Kelola perjalanan kapal dan pemesanan tiket penumpang.</p>
         </div>
-
-        <fieldset class="form-group">
-          <legend>Jenis Kendaraan</legend>
-          <div class="radio-group">
-            <label class="radio-pill">
-              <input type="radio" name="jenis" value="Motor" checked>
-              <span>Motor <small>(Rp 3.000/jam)</small></span>
-            </label>
-            <label class="radio-pill">
-              <input type="radio" name="jenis" value="Mobil">
-              <span>Mobil <small>(Rp 5.000/jam)</small></span>
-            </label>
-            <label class="radio-pill">
-              <input type="radio" name="jenis" value="Bus">
-              <span>Bus <small>(Rp 10.000/jam)</small></span>
-            </label>
-          </div>
-        </fieldset>
-
-        <div class="button-group">
-          <button type="button" id="btn-masuk" class="btn btn-primary">Masuk</button>
-          <button type="button" id="btn-keluar" class="btn btn-secondary">Keluar &amp; Bayar</button>
-        </div>
-      </form>
-
-      <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
-
-      <!-- Fitur 2: Kapasitas Slot -->
-      <div class="capacity-section" aria-label="Kapasitas Parkir">
-        <h3>Kapasitas Slot Aktif</h3>
-        <div id="capacity-grid" class="capacity-grid"></div>
-      </div>
+        <span id="current-date"></span>
     </section>
 
-    <!-- Panel Log Parkir -->
-    <section class="card" aria-labelledby="log-heading">
-      <div class="log-header">
-        <h2 id="log-heading">Log Parkir</h2>
-        <button type="button" id="btn-reset" class="btn btn-ghost btn-sm">Reset Data</button>
-      </div>
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">🎫</div>
+            <div>
+                <p>Total Tiket Terjual</p>
+                <h3 id="total-tiket">0</h3>
+            </div>
+        </div>
 
-      <!-- Fitur 3: Pencarian & Filter -->
-      <div class="toolbar">
-        <input
-          type="search"
-          id="search-plat"
-          placeholder="Cari nomor plat..."
-          aria-label="Cari nomor plat di log"
-        >
-        <select id="filter-status" aria-label="Filter status log">
-          <option value="ALL">Semua Status</option>
-          <option value="ACTIVE">Sedang Parkir</option>
-          <option value="COMPLETED">Sudah Keluar</option>
-        </select>
-      </div>
+        <div class="stat-card">
+            <div class="stat-icon green">👥</div>
+            <div>
+                <p>Total Penumpang</p>
+                <h3 id="total-penumpang">0</h3>
+            </div>
+        </div>
 
-      <ul id="log-list" class="log-list" aria-live="polite"></ul>
+        <div class="stat-card">
+            <div class="stat-icon orange">🚢</div>
+            <div>
+                <p>Kapal Beroperasi</p>
+                <h3 id="total-kapal">3</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple">💰</div>
+            <div>
+                <p>Total Pendapatan</p>
+                <h3 id="total-pendapatan">Rp 0</h3>
+            </div>
+        </div>
     </section>
-  </main>
 
-  <script type="module" src="script.js"></script>
+    <!-- FORM PEMESANAN -->
+    <section class="content-grid">
+
+        <div class="card">
+            <div class="card-heading">
+                <div>
+                    <h2>Pemesanan Tiket Kapal</h2>
+                    <p>Masukkan data perjalanan penumpang.</p>
+                </div>
+                <span class="heading-icon">🎫</span>
+            </div>
+
+            <form id="booking-form">
+
+                <div class="form-group">
+                    <label>Nama Lengkap Penumpang</label>
+                    <input type="text" id="nama"
+                        placeholder="Masukkan nama penumpang" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nomor Identitas</label>
+                        <input type="text" id="identitas"
+                            placeholder="NIK / Paspor" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nomor HP</label>
+                        <input type="tel" id="telepon"
+                            placeholder="08xxxxxxxxxx" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Jenis Kapal</label>
+                    <select id="jenis-kapal" required>
+                        <option value="">Pilih jenis kapal</option>
+                        <option value="Kapal Cepat">Kapal Cepat</option>
+                        <option value="Kapal Penumpang">Kapal Penumpang</option>
+                        <option value="Kapal Ferry">Kapal Ferry</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Nama Kapal</label>
+                    <select id="nama-kapal" required>
+                        <option value="">Pilih kapal</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pelabuhan Asal</label>
+                        <select id="asal" required>
+                            <option value="">Pilih pelabuhan</option>
+                            <option value="Jakarta">Tanjung Priok - Jakarta</option>
+                            <option value="Surabaya">Tanjung Perak - Surabaya</option>
+                            <option value="Makassar">Soekarno Hatta - Makassar</option>
+                            <option value="Bali">Benoa - Bali</option>
+                            <option value="Lombok">Lembar - Lombok</option>
+                            <option value="Batam">Batam</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pelabuhan Tujuan</label>
+                        <select id="tujuan" required>
+                            <option value="">Pilih pelabuhan</option>
+                            <option value="Jakarta">Tanjung Priok - Jakarta</option>
+                            <option value="Surabaya">Tanjung Perak - Surabaya</option>
+                            <option value="Makassar">Soekarno Hatta - Makassar</option>
+                            <option value="Bali">Benoa - Bali</option>
+                            <option value="Lombok">Lembar - Lombok</option>
+                            <option value="Batam">Batam</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tanggal Keberangkatan</label>
+                        <input type="date" id="tanggal" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Jumlah Penumpang</label>
+                        <input type="number" id="jumlah"
+                            min="1" max="10" value="1" required>
+                    </div>
+                </div>
+
+                <div class="price-preview">
+                    <div>
+                        <span>Estimasi Harga per Penumpang</span>
+                        <strong id="harga-satuan">Rp 0</strong>
+                    </div>
+                    <div>
+                        <span>Total Pembayaran</span>
+                        <strong id="harga-total">Rp 0</strong>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    + Buat Pemesanan Tiket
+                </button>
+
+                <div id="feedback" class="feedback"></div>
+
+            </form>
+        </div>
+
+        <!-- INFORMASI KAPAL -->
+        <div class="card">
+            <div class="card-heading">
+                <div>
+                    <h2>Informasi Armada</h2>
+                    <p>Daftar kapal yang tersedia.</p>
+                </div>
+                <span class="heading-icon">🚢</span>
+            </div>
+
+            <div id="fleet-list" class="fleet-list"></div>
+
+            <div class="info-box">
+                <strong>Informasi Tarif</strong>
+                <p>
+                    Tarif tiket merupakan estimasi berdasarkan jenis kapal
+                    dan rute perjalanan. Sesuaikan dengan tarif resmi
+                    perusahaan sebelum digunakan secara operasional.
+                </p>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- RIWAYAT PEMESANAN -->
+    <section class="card history-card">
+
+        <div class="card-heading history-heading">
+            <div>
+                <h2>Riwayat Pemesanan Tiket</h2>
+                <p>Daftar seluruh transaksi perjalanan kapal.</p>
+            </div>
+            <button id="reset-data" class="btn btn-danger-outline">
+                Reset Data
+            </button>
+        </div>
+
+        <div class="toolbar">
+            <input type="search" id="search"
+                placeholder="Cari nama atau kode tiket...">
+
+            <select id="filter-status">
+                <option value="ALL">Semua Status</option>
+                <option value="BOOKED">Dipesan</option>
+                <option value="CHECKED">Sudah Check-In</option>
+                <option value="CANCELLED">Dibatalkan</option>
+            </select>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kode Tiket</th>
+                        <th>Penumpang</th>
+                        <th>Rute</th>
+                        <th>Kapal</th>
+                        <th>Keberangkatan</th>
+                        <th>Jumlah</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="booking-list">
+                    <tr>
+                        <td colspan="9" class="empty">
+                            Belum ada pemesanan tiket.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 SeaTrans - Sistem Manajemen Transportasi Kapal Laut</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
